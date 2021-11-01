@@ -21,7 +21,7 @@
   "scripts": {
     "prebuild": "npm run lint",
     "lint": "eslint --cache --ext .ts,.tsx src",
-    "build": "tsc && webpack --mode=production",
+    "build": "rimraf dist/ui && IS_WEB=1 webpack --mode=production",
     "prepare": "rimraf dist && npm run build",
     "prestart": "npm run build",
     "start": "node cli.js",
