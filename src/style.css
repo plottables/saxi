@@ -1,11 +1,11 @@
 :root {
-  --teal: #75D5CD;
-  --teal-light: #DCF4F2;
-  --teal-dark: #3F9991;
-  --purple: #8E75B6;
-  --purple-light: #E3DCED;
-  --purple-dark: #604987;
-  --red: #DE7272;
+  --teal: #000000;
+  --teal-light: #000000;
+  --teal-dark: #000000;
+  --purple: #000000;
+  --purple-light: #000000;
+  --purple-dark: #000000;
+  --red: #000000;
   --panel-width: 260px;
 }
 
@@ -436,4 +436,9 @@ summary:focus {
 .info-disconnected {
   text-align: center;
   color: var(--red);
+}
+
+.logo {
+  padding: 0.5rem;
+  width: 100%;
 }

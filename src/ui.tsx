@@ -17,6 +17,7 @@ import "./style.css";
 import pathJoinRadiusIcon from "./icons/path-joining radius.svg";
 import pointJoinRadiusIcon from "./icons/point-joining radius.svg";
 import rotateDrawingIcon from "./icons/rotate-drawing.svg";
+import logo from "./icons/logo.svg"
 import { EBB } from "./ebb";
 
 const defaultVisualizationOptions = {
@@ -1091,9 +1092,7 @@ function Root() {
   return <DispatchContext.Provider value={dispatch}>
     <div className={`root ${state.connected ? "connected" : "disconnected"}`}>
       <div className="control-panel">
-        <div className={`saxi-title red`} title={state.deviceInfo ? state.deviceInfo.path : null}>
-          <span className="red reg">s</span><span className="teal">axi</span>
-        </div>
+        <img className="logo" src={logo} alt="logo" />
         {IS_WEB ? <PortSelector driver={driver} setDriver={setDriver} /> : null}
         {!state.connected ? <div className="info-disconnected">disconnected</div> : null}
         <div className="section-header">pen</div>
@@ -1139,7 +1138,7 @@ function Root() {
 function DragTarget() {
   return <div className="drag-target">
     <div className="drag-target-message">
-      Drag SVG here
+      Loading...
     </div>
   </div>;
 }

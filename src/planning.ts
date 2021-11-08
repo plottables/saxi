@@ -36,8 +36,8 @@ export interface PlanOptions {
 }
 
 export const defaultPlanOptions: PlanOptions = {
-  penUpHeight: 50,
-  penDownHeight: 60,
+  penUpHeight: 40,
+  penDownHeight: 70,
   pointJoinRadius: 0,
   pathJoinRadius: 0.5,
   paperSize: PaperSize.standard.ArchA.landscape,
@@ -57,7 +57,7 @@ export const defaultPlanOptions: PlanOptions = {
   penLiftDuration: 0.12,
 
   sortPaths: true,
-  rotateDrawing: 0,
+  rotateDrawing: 270,
   fitPage: true,
   cropToMargins: true,
 
