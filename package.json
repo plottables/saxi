@@ -25,7 +25,7 @@
     "prepare": "rimraf dist && npm run build",
     "prestart": "npm run build",
     "start": "node cli.js",
-    "dev": "tsc && IS_WEB=1 webpack --mode=development -w & node cli.js",
+    "dev": "tsc && IS_WEB=1 webpack --mode=production -w & node cli.js",
     "deploy": "rimraf dist/ui && IS_WEB=1 webpack --mode=production && gh-pages -d dist/ui",
     "test": "jest"
   },

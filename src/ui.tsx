@@ -748,7 +748,7 @@ function LayerSelector({state}: {state: State}) {
         onChange={layersChanged}
         size={3}
       >
-        {layers.map((layer) => <option key={layer}>{layer}</option>)}
+        {layers.filter(layer => layer != null).map((layer) => <option key={layer}>{layer}</option>)}
       </select>
     </label>
   </div>;
