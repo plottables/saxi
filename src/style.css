@@ -442,3 +442,9 @@ summary:focus {
   padding: 0.5rem;
   width: 100%;
 }
+
+.saxi {
+  font-size: 14px;
+  text-align: center;
+  padding-bottom: 0.5rem;
+}
