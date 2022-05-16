@@ -889,7 +889,7 @@ function PlanOptions({state}: {state: State}) {
     </label>
     <div className="horizontal-labels">
 
-      <label title="point-joining radius (mm)" >
+      <label title="Joins adjacent points along a path within this tolerance (in mm)" >
         <img src={pointJoinRadiusIcon} alt="point-joining radius (mm)"/>
         <input
           type="number"
@@ -899,7 +899,7 @@ function PlanOptions({state}: {state: State}) {
           onChange={(e) => dispatch({type: "SET_PLAN_OPTION", value: {pointJoinRadius: Number(e.target.value)}})}
         />
       </label>
-      <label title="path-joining radius (mm)">
+      <label title="Joins adjacent paths where the first ends within this tolerance (in mm) of where the second begins">
         <img src={pathJoinRadiusIcon} alt="path-joining radius (mm)" />
         <input
           type="number"
@@ -943,7 +943,7 @@ function PlanOptions({state}: {state: State}) {
           />
         </label>
       </div>
-      <label>
+      <label title="Controls how much the machine slows down while going around sharp corners. Higher values cause less slowing down. Moving faster around corners improves speed, while going more slowly improves precision">
         cornering factor
         <input
           type="number"
