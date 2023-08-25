@@ -542,8 +542,8 @@ function PaperConfig({state}: {state: State}) {
   }
 
   function setCustomPaperSize(x: number, y: number) {
-    setXView(x, unitName)
-    setYView(y, unitName)
+    setXView(x)
+    setYView(y)
 
     dispatch({type: "SET_PLAN_OPTION", value: {paperSize: new PaperSize({
       x: convertUnit(x, unitName),
