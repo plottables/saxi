@@ -496,20 +496,66 @@ function SwapPaperSizesButton({ onClick }: { onClick: () => void }) {
   </svg>;
 }
 
+const inchesToMm = (n: number) => n * 25.4
+const mmToInches = (n: number) => n / 25.4
+const convertUnit = (n: number, u: string) => u === 'mm'
+  ? Number(n)
+  : inchesToMm(Number(n))
+
+const revertUnit = (n: number, u: string) => u === 'mm'
+  ? Number(n)
+  : mmToInches(Number(n))
+
 function PaperConfig({state}: {state: State}) {
   const dispatch = useContext(DispatchContext);
-  const landscape = state.planOptions.paperSize.isLandscape;
+  const {planOptions} = state
+  const {paperSize, unitName} = planOptions;
+  const {landscape} = planOptions.paperSize;
+
+  const [xView, setXView] = useState(revertUnit(paperSize.size.x, unitName))
+  const [yView, setYView] = useState(revertUnit(paperSize.size.y, unitName))
+  const [marginView, setMarginView] = useState(revertUnit(planOptions.marginMm, unitName))
+
+
+  const updateUnit = (e: ChangeEvent) => {
+    const updatedUnitName = (e.target as HTMLInputElement).value;
+
+    if (unitName !== updatedUnitName) {
+      setXView(revertUnit(paperSize.size.x, updatedUnitName))
+      setYView(revertUnit(paperSize.size.y, updatedUnitName))
+      setMarginView(revertUnit(planOptions.marginMm, updatedUnitName))
+      dispatch({type: "SET_PLAN_OPTION", value: {unitName: updatedUnitName}});
+    }
+  }
+
   function setPaperSize(e: ChangeEvent) {
     const name = (e.target as HTMLInputElement).value;
     if (name !== "Custom") {
       const ps = PaperSize.standard[name][landscape ? "landscape" : "portrait"];
+
+      setXView(revertUnit(ps.size.x, unitName))
+      setYView(revertUnit(ps.size.y, unitName))
+      setMarginView(revertUnit(planOptions.marginMm, unitName))
+
       dispatch({type: "SET_PLAN_OPTION", value: {paperSize: ps}});
     }
   }
+
   function setCustomPaperSize(x: number, y: number) {
-    dispatch({type: "SET_PLAN_OPTION", value: {paperSize: new PaperSize({x, y})}});
+    setXView(x)
+    setYView(y)
+
+    dispatch({type: "SET_PLAN_OPTION", value: {paperSize: new PaperSize({
+      x: convertUnit(x, unitName),
+      y: convertUnit(y, unitName)
+    })}});
   }
-  const {paperSize} = state.planOptions;
+
+  function setMargin(marginValue: number) {
+    setMarginView(marginValue)
+    dispatch({type: "SET_PLAN_OPTION", value: {marginMm: convertUnit(marginValue, unitName)}})
+  }
+
   const paperSizeName = Object.keys(PaperSize.standard).find((psName) => {
     const ps = PaperSize.standard[psName].size;
     return (ps.x === paperSize.size.x && ps.y === paperSize.size.y)
@@ -525,13 +571,25 @@ function PaperConfig({state}: {state: State}) {
       )}
       <option>Custom</option>
     </select>
+
+    <select
+      value={unitName}
+      onChange={updateUnit}
+    >
+      <option>mm</option>
+      <option>inches</option>
+    </select>
+
     <div className="paper-sizes">
       <label className="paper-label">
-        width (mm)
+        width ({unitName})
         <input
           type="number"
-          value={paperSize.size.x}
-          onChange={(e) => setCustomPaperSize(Number(e.target.value), paperSize.size.y)}
+          value={xView}
+          onChange={(e) => setCustomPaperSize(
+            Number(e.target.value),
+            yView
+          )}
         />
       </label>
       <SwapPaperSizesButton onClick={() => {
@@ -541,11 +599,14 @@ function PaperConfig({state}: {state: State}) {
         });
       }} />
       <label className="paper-label">
-        height (mm)
+        height ({unitName})
         <input
           type="number"
-          value={paperSize.size.y}
-          onChange={(e) => setCustomPaperSize(paperSize.size.x, Number(e.target.value))}
+          value={yView}
+          onChange={(e) => setCustomPaperSize(
+            xView,
+            Number(e.target.value)
+          )}
         />
       </label>
     </div>
@@ -565,13 +626,13 @@ function PaperConfig({state}: {state: State}) {
       </label>
     </div>
     <label>
-      margin (mm)
+      margin ({unitName})
       <input
         type="number"
-        value={state.planOptions.marginMm}
+        value={marginView}
         min="0"
         max={Math.min(paperSize.size.x / 2, paperSize.size.y / 2)}
-        onChange={(e) => dispatch({type: "SET_PLAN_OPTION", value: {marginMm: Number(e.target.value)}})}
+        onChange={(e) => setMargin(Number(e.target.value))}
       />
     </label>
   </div>;
@@ -1075,6 +1136,24 @@ function Root() {
     };
   }, [driver])
 
+  const uploadFile = (e: any) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    setIsLoadingFile(true);
+    setPlan(null);
+    // console.log(item)
+    reader.onload = () => {
+      dispatch(setPaths(readSvg(reader.result as string)));
+      document.body.classList.remove("dragover");
+      setIsLoadingFile(false);
+    };
+    reader.onerror = () => {
+      setIsLoadingFile(false);
+    };
+    reader.readAsText(file);
+  }
+
   useEffect(() => {
     const ondrop = (e: DragEvent) => {
       e.preventDefault();
@@ -1135,6 +1214,9 @@ function Root() {
         {IS_WEB ? <PortSelector driver={driver} setDriver={setDriver} /> : null}
         {!state.connected ? <div className="info-disconnected">disconnected</div> : null}
         <div className="section-header">pen</div>
+        <div className="center">
+          <input type="file" onChange={uploadFile} />
+        </div>
         <div className="section-body">
           <PenHeight state={state} driver={driver} />
           <MotorControl driver={driver} />

@@ -205,6 +205,7 @@ export function cli(argv: string[]): void {
         const planOptions: PlanOptions = {
           paperSize,
           marginMm: args.margin,
+          unitName: 'mm',
 
           selectedGroupLayers: new Set([]), // TODO
           selectedStrokeLayers: new Set([]), // TODO
