@@ -532,12 +532,18 @@ function PaperConfig({state}: {state: State}) {
     const name = (e.target as HTMLInputElement).value;
     if (name !== "Custom") {
       const ps = PaperSize.standard[name][landscape ? "landscape" : "portrait"];
+
+      setXView(revertUnit(ps.size.x, unitName))
+      setYView(revertUnit(ps.size.y, unitName))
+      setMarginView(revertUnit(planOptions.marginMm, unitName))
+
       dispatch({type: "SET_PLAN_OPTION", value: {paperSize: ps}});
     }
   }
+
   function setCustomPaperSize(x: number, y: number) {
-    setXView(x)
-    setYView(y)
+    setXView(x, unitName)
+    setYView(y, unitName)
 
     dispatch({type: "SET_PLAN_OPTION", value: {paperSize: new PaperSize({
       x: convertUnit(x, unitName),
