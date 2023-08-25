@@ -8,6 +8,8 @@ import {vadd, vdot, Vec2, vlen, vmul, vnorm, vsub} from "./vec";
 export interface PlanOptions {
   paperSize: PaperSize;
   marginMm: number;
+
+  unitName: 'mm' | 'inches';
   selectedStrokeLayers: Set<string>;
   selectedGroupLayers: Set<string>;
   layerMode: 'group' | 'stroke' | 'all';
@@ -42,6 +44,7 @@ export const defaultPlanOptions: PlanOptions = {
   pathJoinRadius: 0.5,
   paperSize: PaperSize.standard.ArchA.landscape,
   marginMm: 20,
+  unitName: 'mm',
   selectedGroupLayers: new Set(),
   selectedStrokeLayers: new Set(),
   layerMode: 'stroke',
